@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Key Generator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background-color: #ffffff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      width: 90%;
+      max-width: 500px;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+    }
+
+    .key {
+      font-size: 1.2rem;
+      margin: 10px 0;
+      padding: 10px;
+      background-color: #f0f0f0;
+      border-radius: 5px;
+      word-wrap: break-word;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 20px;
+      font-size: 1rem;
+    }
+
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+
+    .notification {
+      margin-top: 20px;
+      font-size: 1rem;
+      color: red;
+    }
+
+    /* Mobile compatibility */
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 1.5rem;
+      }
+
+      .key {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Key Generator</h1>
+  <div class="key" id="keyOutput">No key generated yet</div>
+  <button id="generateBtn" onclick="generateKey()">Generate Key</button>
+  <button id="linkBtn" style="display:none" onclick="goToLinkvertise()">Go to Linkvertise</button>
+  <div class="notification" id="notification"></div>
+</div>
+
+<script>
+  // Function to generate a key and handle expiration logic
+  let keyExpirationTime = 0;
+  let generatedKey = '';
+
+  // Simulated Linkvertise URL (replace with actual URL for your system)
+  const linkvertiseURL = 'https://www.linkvertise.com';
+
+  function generateKey() {
+    const now = Date.now();
+    // Check if key has expired (24 hours = 86400000 ms)
+    if (keyExpirationTime && now < keyExpirationTime) {
+      document.getElementById('keyOutput').textContent = generatedKey;
+      document.getElementById('notification').textContent = 'Key is still valid!';
+      return;
+    }
+
+    // Generate a new key
+    generatedKey = 'KEY-' + Math.random().toString(36).substr(2, 10).toUpperCase();
+    keyExpirationTime = now + 86400000; // Set expiration time (24 hours)
+    document.getElementById('keyOutput').textContent = generatedKey;
+    document.getElementById('notification').textContent = 'Key generated successfully.';
+
+    // Show "Go to Linkvertise" button after key expires
+    document.getElementById('generateBtn').disabled = true;
+    document.getElementById('linkBtn').style.display = 'block';
+  }
+
+  // Redirect user to Linkvertise after key expires
+  function goToLinkvertise() {
+    window.location.href = linkvertiseURL; // Redirect to Linkvertise
+  }
+
+  // To automatically handle page load and check if key is expired
+  window.onload = function() {
+    const now = Date.now();
+    if (keyExpirationTime && now < keyExpirationTime) {
+      document.getElementById('keyOutput').textContent = generatedKey;
+      document.getElementById('notification').textContent = 'Key is still valid!';
+      document.getElementById('generateBtn').disabled = true;
+    } else {
+      document.getElementById('generateBtn').disabled = false;
+    }
+  };
+</script>
+
+</body>
+</html>
